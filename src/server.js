@@ -4,6 +4,8 @@ const cors = require('cors');
 dotenv.config();
 const mongoose = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
+const labRoutes = require('./routes/labRoutes');
+const userRoutes = require('./routes/userRoutes');
 const componentRoutes = require('./routes/componentRoutes');
 const requestRoutes = require('./routes/requestRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
@@ -21,6 +23,8 @@ app.use(cors({
 }))
 
 app.use('/api/auth', authRoutes);
+app.use('/api/labs', labRoutes);
+app.use('/api/users', userRoutes); 
 app.use('/api/components', componentRoutes);
 app.use('/api/requests', requestRoutes);
 app.use('/api/notifications', notificationRoutes);
