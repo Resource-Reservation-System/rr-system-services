@@ -1,13 +1,17 @@
 const mongoose = require('mongoose');
+const { updateSearchIndex } = require('./User');
 
 const requestSchema = new mongoose.Schema({
-    requestId: { type: String, required: true, unique: true },
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     component: { type: mongoose.Schema.Types.ObjectId, ref: 'Component', required: true },
-    custodian: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    labInCharge: { type: String, ref: 'Lab', required: true },
+    labIdInCharge: { type: mongoose.Schema.Types.ObjectId, ref: 'Lab', required: true },
     status: { type: String, enum: ['pending', 'approved', 'rejected', 'returned'], default: 'pending' },
+    purpose: { type: String },
     notes: { type: String },
     inHold: { type: Boolean, default: false },
+    fromDate: { type: Date },
+    toDate: { type: Date },
     returnDate: { type: Date },
     penalizedAmount: { type: Number, default: 0 },
     createdAt: { type: Date, default: Date.now },

@@ -1,74 +1,64 @@
-const Component = require('../models/Component');
-const errorHandler = require('../utils/errorHandler');
+const Component = require('../models/Component'); // Import your Component model
 
-exports.addComponent = async (req, res, next) => {
+// Add a new component
+exports.addComponent = async (req, res) => {
     try {
-        const { name, description, custodian, imageUrl, datasheetLink, tags, quantity, category } = req.body;
-        const component = new Component({
-            name,
-            description,
-            custodian,
-            imageUrl,
-            datasheetLink,
-            tags,
-            quantity,
-            category,
-            createdAt: new Date(),
+        const newComponent = new Component({
+            ...req.body,
+            imageUrl: req.body.imageUrl || 'https://via.placeholder.com/50'
         });
-        await component.save();
-        res.status(201).json({ message: 'Component added successfully', component });
+        await newComponent.save(); // Save to database
+        res.status(201).json({ message: 'Component added successfully', component: newComponent });
     } catch (error) {
-        next(error);
+        res.status(400).json({ message: 'Failed to add component', error: error.message });
     }
 };
 
-exports.getAllComponents = async (req, res, next) => {
+// Get all components
+exports.getAllComponents = async (req, res) => {
     try {
-        const components = await Component.find();
+        const components = await Component.find(); // Fetch all components from the database
         res.status(200).json(components);
     } catch (error) {
-        next(error);
+        res.status(500).json({ message: 'Failed to retrieve components', error: error.message });
     }
 };
 
-exports.getComponentDetails = async (req, res, next) => {
+// Get a specific component by ID
+exports.getComponentDetails = async (req, res) => {
     try {
-        const { componentId } = req.params;
-        const component = await Component.findById(componentId);
+        const component = await Component.findById(req.params.componentId); // Find component by ID
         if (!component) {
             return res.status(404).json({ message: 'Component not found' });
         }
         res.status(200).json(component);
     } catch (error) {
-        next(error);
+        res.status(500).json({ message: 'Failed to retrieve component', error: error.message });
     }
 };
 
-exports.updateComponentDetails = async (req, res, next) => {
+// Update a component
+exports.updateComponentDetails = async (req, res) => {
     try {
-        const { componentId } = req.params;
-        const updatedData = req.body;
-        updatedData.updatedAt = new Date();
-        
-        const updatedComponent = await Component.findByIdAndUpdate(componentId, updatedData, { new: true });
+        const updatedComponent = await Component.findByIdAndUpdate(req.params.componentId, req.body, { new: true }); // Update component
         if (!updatedComponent) {
             return res.status(404).json({ message: 'Component not found' });
         }
-        res.status(200).json({ message: 'Component updated successfully', updatedComponent });
+        res.status(200).json({ message: 'Component updated successfully', component: updatedComponent });
     } catch (error) {
-        next(error);
+        res.status(400).json({ message: 'Failed to update component', error: error.message });
     }
 };
 
-exports.removeComponent = async (req, res, next) => {
+// Remove a component
+exports.removeComponent = async (req, res) => {
     try {
-        const { componentId } = req.params;
-        const component = await Component.findByIdAndDelete(componentId);
-        if (!component) {
+        const deletedComponent = await Component.findByIdAndDelete(req.params.componentId); // Delete component
+        if (!deletedComponent) {
             return res.status(404).json({ message: 'Component not found' });
         }
         res.status(200).json({ message: 'Component removed successfully' });
     } catch (error) {
-        next(error);
+        res.status(500).json({ message: 'Failed to remove component', error: error.message });
     }
 };

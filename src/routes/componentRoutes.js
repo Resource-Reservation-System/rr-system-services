@@ -5,18 +5,18 @@ const { protect, custodianOnly, adminOnly } = require('../middleware/authMiddlew
 const router = express.Router();
 
 // Add a new component (custodian only)
-router.post('/', protect, custodianOnly, componentController.addComponent);
+router.post('/', componentController.addComponent);
 
 // Get all components (available to all)
-router.get('/', protect, componentController.getAllComponents);
+router.get('/', componentController.getAllComponents);
 
 // Get a specific component by ID
-router.get('/:componentId', protect, componentController.getComponentDetails);
+router.get('/:componentId', componentController.getComponentDetails);
 
 // Update a component (custodian only)
-router.put('/:componentId', protect, custodianOnly, componentController.updateComponentDetails);
+router.put('/:componentId', componentController.updateComponentDetails);
 
 // Remove a component (custodian only)
-router.delete('/:componentId', protect, custodianOnly, componentController.removeComponent);
+router.delete('/:componentId', componentController.removeComponent);
 
 module.exports = router;

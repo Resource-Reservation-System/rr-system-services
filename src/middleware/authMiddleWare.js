@@ -28,7 +28,7 @@ exports.protect = async (req, res, next) => {
 
 // Custodian-only route middleware
 exports.custodianOnly = (req, res, next) => {
-    if (req.user && req.user.role === 'custodian') {
+    if (req.user && req.user.role === 'staff') {
         return next();
     }
     return res.status(403).json({ message: 'Access denied, custodian only' });

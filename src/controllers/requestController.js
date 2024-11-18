@@ -4,20 +4,47 @@ const { sendNotification } = require('../utils/sendNotification');
 
 exports.createRequest = async (req, res, next) => {
     try {
-        const { componentId, custodianId, notes, returnDate } = req.body;
+        const { componentId, userId, fromDate, toDate, purpose, labInCharge, labIdInCharge } = req.body;
         const request = new Request({
-            user: req.user.id,
+            userId,
             component: componentId,
-            custodian: custodianId,
+            labInCharge,
+            labIdInCharge,
             status: 'pending',
-            notes,
             inHold: false,
-            returnDate,
+            fromDate,
+            toDate,
+            purpose,
+            notes: '',
             createdAt: new Date(),
         });
         await request.save();
-        await sendNotification(custodianId, `New request from ${req.user.fullName} for component ID: ${componentId}`);
+        // await sendNotification(`New request for component ID: ${componentId}`);
         res.status(201).json({ message: 'Request created successfully', request });
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.getUserRequestsByLabId = async (req, res, next) => {
+    const labId = req.query.labId;
+
+    try {
+        const requests = await Request.find({ labIdInCharge: labId })
+            .populate({
+                path: 'userId', 
+                select: 'fullName'
+            })
+            .populate({
+                path: 'component',
+                select: 'name' 
+            });
+
+        if (!requests.length) {
+            return res.status(404).json({ message: 'No requests found for this lab' });
+        }
+
+        res.status(200).json(requests);
     } catch (error) {
         next(error);
     }

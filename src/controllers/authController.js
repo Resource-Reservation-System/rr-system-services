@@ -42,7 +42,9 @@ exports.login = async (req, res, next) => {
             message: 'Login successful', 
             token,
             role: user.role,
-            userId: user.userId,
+            labInCharge: user.labInCharge,
+            labIdInCharge: user.labIdInCharge,
+            userId: user._id,
             fullName: user.fullName,
         });
     } catch (error) {
