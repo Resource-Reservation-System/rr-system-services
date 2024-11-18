@@ -50,6 +50,30 @@ exports.getUserRequestsByLabId = async (req, res, next) => {
     }
 };
 
+exports.getUserRequestsByUserId = async (req, res, next) => {
+    const userId = req.query.userId;
+
+    try {
+        const requests = await Request.find({ userId: userId })
+            .populate({
+                path: 'userId', 
+                select: 'fullName'
+            })
+            .populate({
+                path: 'component',
+                select: 'name' 
+            });
+
+        if (!requests.length) {
+            return res.status(404).json({ message: 'No requests found for this lab' });
+        }
+
+        res.status(200).json(requests);
+    } catch (error) {
+        next(error);
+    }
+};
+
 exports.getUserRequests = async (req, res, next) => {
     try {
         const requests = await Request.find({ user: req.user.id }).populate('component');

@@ -12,7 +12,7 @@ router.post('/', requestController.createRequest);
 router.get('/', requestController.getUserRequestsByLabId);
 
 // Student can view their own requests
-router.get('/user', requestController.getUserRequests);
+router.get('/user', requestController.getUserRequestsByUserId);
 
 // Custodian or Admin can view all requests
 router.get('/all', custodianOnly, requestController.getAllRequests);
