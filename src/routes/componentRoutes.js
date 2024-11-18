@@ -13,6 +13,9 @@ router.get('/', componentController.getAllComponents);
 // Get a specific component by ID
 router.get('/:componentId', componentController.getComponentDetails);
 
+// Get a specific component by ID
+router.get('/quantity/:componentId', componentController.getComponentQuantity);
+
 // Update a component (custodian only)
 router.put('/:componentId', componentController.updateComponentDetails);
 

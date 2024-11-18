@@ -14,6 +14,9 @@ router.get('/', requestController.getUserRequestsByLabId);
 // Student can view their own requests
 router.get('/user', requestController.getUserRequestsByUserId);
 
+// Update the request details
+router.put('/:id', requestController.updateRequestDetails);
+
 // Custodian or Admin can view all requests
 router.get('/all', custodianOnly, requestController.getAllRequests);
 

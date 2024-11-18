@@ -37,6 +37,19 @@ exports.getComponentDetails = async (req, res) => {
     }
 };
 
+
+exports.getComponentQuantity = async (req, res) => {
+    try {
+        const component = await Component.findById(req.params.componentId).select('quantity');
+        if (!component) {
+            return res.status(404).json({ message: 'Component not found' });
+        }
+        res.status(200).json(component);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to retrieve component', error: error.message });
+    }
+};
+
 // Update a component
 exports.updateComponentDetails = async (req, res) => {
     try {

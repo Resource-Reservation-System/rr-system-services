@@ -33,7 +33,7 @@ exports.getUserRequestsByLabId = async (req, res, next) => {
         const requests = await Request.find({ labIdInCharge: labId })
             .populate({
                 path: 'userId', 
-                select: 'fullName'
+                select: 'fullName email'
             })
             .populate({
                 path: 'component',
@@ -71,6 +71,28 @@ exports.getUserRequestsByUserId = async (req, res, next) => {
         res.status(200).json(requests);
     } catch (error) {
         next(error);
+    }
+};
+
+
+exports.updateRequestDetails = async (req, res) => {
+    const { id } = req.params;
+    const { status, purpose, fromDate, toDate, inHold } = req.body;
+
+    try {
+        const updatedRequest = await Request.findByIdAndUpdate(
+            id,
+            { status, purpose, fromDate, toDate, inHold }, 
+            { new: true } 
+        );
+
+        if (!updatedRequest) {
+            return res.status(404).json({ message: 'Request not found' });
+        }
+
+        res.status(200).json(updatedRequest);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to update request', error: error.message });
     }
 };
 
