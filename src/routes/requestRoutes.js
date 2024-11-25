@@ -4,19 +4,26 @@ const { protect, custodianOnly, adminOnly } = require('../middleware/authMiddlew
 
 const router = express.Router();
 
+
 // Student can create a request
-router.post('/', protect, requestController.createRequest);
+router.post('/', requestController.createRequest);
+
+//Staff or Admin can view all requests corresponding to them
+router.get('/', requestController.getUserRequestsByLabId);
 
 // Student can view their own requests
-router.get('/user', protect, requestController.getUserRequests);
+router.get('/user', requestController.getUserRequestsByUserId);
+
+// Update the request details
+router.put('/:id', requestController.updateRequestDetails);
 
 // Custodian or Admin can view all requests
-router.get('/all', protect, custodianOnly, requestController.getAllRequests);
+router.get('/all', custodianOnly, requestController.getAllRequests);
 
 // Custodian or Admin can approve/reject requests
-router.patch('/:requestId', protect, custodianOnly, requestController.manageRequest);
+router.patch('/:requestId', custodianOnly, requestController.manageRequest);
 
 // Student can cancel their own request
-router.delete('/:requestId', protect, requestController.deleteRequest);
+router.delete('/:requestId', requestController.deleteRequest);
 
 module.exports = router;

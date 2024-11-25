@@ -35,7 +35,7 @@ exports.updateUser = async (req, res) => {
 
     try {
         const updatedUser = await User.findOneAndUpdate(
-            { userId },
+            { _id: userId }, // Find user by userId
             updates,
             { new: true } // Return the updated document
         );
@@ -55,7 +55,7 @@ exports.deleteUser = async (req, res) => {
     const { userId } = req.params; // Get userId from request parameters
 
     try {
-        const deletedUser = await User.findOneAndDelete({ userId });
+        const deletedUser = await User.findByIdAndDelete(userId);
 
         if (!deletedUser) {
             return res.status(404).json({ message: 'User not found' });
@@ -63,6 +63,6 @@ exports.deleteUser = async (req, res) => {
 
         res.status(200).json({ message: 'User deleted successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Error deleting user', error });
+        res.status(500).json({ message: 'Error deleting user', error: error.message });
     }
 };
