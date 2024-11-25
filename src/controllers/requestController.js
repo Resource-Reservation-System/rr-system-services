@@ -37,7 +37,7 @@ exports.getUserRequestsByLabId = async (req, res, next) => {
             })
             .populate({
                 path: 'component',
-                select: 'name' 
+                select: 'name quantity' 
             });
 
         if (!requests.length) {
@@ -77,12 +77,12 @@ exports.getUserRequestsByUserId = async (req, res, next) => {
 
 exports.updateRequestDetails = async (req, res) => {
     const { id } = req.params;
-    const { status, purpose, fromDate, toDate, inHold } = req.body;
+    const { status, purpose, fromDate, toDate, inHold, notes, penalizedAmount } = req.body;
 
     try {
         const updatedRequest = await Request.findByIdAndUpdate(
             id,
-            { status, purpose, fromDate, toDate, inHold }, 
+            { status, purpose, fromDate, toDate, inHold, notes, penalizedAmount }, 
             { new: true } 
         );
 
@@ -138,15 +138,10 @@ exports.manageRequest = async (req, res, next) => {
 exports.deleteRequest = async (req, res, next) => {
     try {
         const { requestId } = req.params;
-        const userId = req.user.id;
 
         const request = await Request.findById(requestId);
         if (!request) {
             return res.status(404).json({ message: 'Request not found' });
-        }
-
-        if (request.user.toString() !== userId) {
-            return res.status(403).json({ message: 'Unauthorized to cancel this request' });
         }
 
         await Request.findByIdAndDelete(requestId);

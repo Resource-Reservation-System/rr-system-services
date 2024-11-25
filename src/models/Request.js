@@ -6,7 +6,7 @@ const requestSchema = new mongoose.Schema({
     component: { type: mongoose.Schema.Types.ObjectId, ref: 'Component', required: true },
     labInCharge: { type: String, ref: 'Lab', required: true },
     labIdInCharge: { type: mongoose.Schema.Types.ObjectId, ref: 'Lab', required: true },
-    status: { type: String, enum: ['pending', 'approved', 'rejected', 'returned', 'reserved'], default: 'pending' },
+    status: { type: String, enum: ['pending', 'approved', 'rejected', 'verification', 'returned', 'reserved'], default: 'pending' },
     purpose: { type: String },
     notes: { type: String },
     inHold: { type: Boolean, default: false },
